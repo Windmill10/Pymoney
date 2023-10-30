@@ -10,7 +10,7 @@ while(True):
     if command == "add":
         commands.Add()
     elif command == "view":
-        commands.View()
+        commands.View(config.item_record, config.amount_record)
     elif command == "delete":
         commands.Delete()
     elif command == "exit":
