@@ -41,7 +41,7 @@ def View(item_record, amount_record):
 def Delete():
     target = input("Item to delete: ")
     if target not in config.item_record:
-        print("Item not in record")
+        print("Item not in record, showing list of items")
         View(config.item_record, config.amount_record)
         return
     

@@ -15,3 +15,5 @@ while(True):
         commands.Delete()
     elif command == "exit":
         break
+    else:
+        print("Invalid command")
