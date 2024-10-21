@@ -8,7 +8,8 @@ categories = cat.Categories()
 records = recs.Records()
 
 while True:
-    cat.Categories.view(categories)
+    #cat.Categories.view(categories)
+    #print(categories.find_subcategories("food"))
     command = input('\nWhat do you want to do (add / ...)? ')
     
     if command == 'add':

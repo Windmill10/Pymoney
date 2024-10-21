@@ -2,21 +2,22 @@ import sys, os
 from classes import categories as cat
 from classes import record as rec
 
-
 class Records:
-
-
+    
+    def _is_empty(self):
+        if len(self._records) == 0:
+            sys.stderr.write("No entries yet!")
+            return True
+        return False
+    
     def _read_and_write(self):
         try:
             with open("user_records/record.txt", 'r') as fh:
                 self._init_balance = int(fh.readline())
                 for line in fh.readlines():
-                    self._records.append(line.strip())
+                    cate, desc, amt = line.strip().split(':')
+                    self._records.append(rec.Record(cate, desc, amt))
         except ValueError:
-            '''sys.stderr.write("Invalid format, deleting the contents\n")
-            fh = open("user_records/record.txt", 'w')
-            fh.write("0\n")
-            fh.close()'''
             try:
                 self._init_balance = int(input("How much money do you have? "))
                 with open("user_records/record.txt", 'w') as fh:
@@ -27,17 +28,16 @@ class Records:
                 with open("user_records/record.txt", "w") as fh:
                     fh.write(f"{self._init_balance}\n")
 
-    #init does not include reading record from file yet
     def __init__(self):
         self._records = []
         self._init_balance = 0
 
         try:
             Records._read_and_write(self)
-        #create file if file not found
+            return
+
         except FileNotFoundError:
             try:
-                #self._init_balance = input("How much money do you have? ")
                 if not os.path.exists("user_records"):
                     os.mkdir("user_records")
                 with open("user_records/record.txt", "w") as fh:
@@ -49,13 +49,14 @@ class Records:
 
     def __repr__(self) -> str:
         return f"Records({self._records})"
+    
     def add(self, records): #record: category1, description1, amount1, category2, description2, amount2, ...
         l = []
         try:
             for record in records.split(','):
                 cate, desc, amt = record.strip().split()
                 amt = int(amt) 
-                if(cat.Categories.is_valid(cate) == False):
+                if(cat.Categories.is_valid(cat.Categories(), cate) == False):
                     sys.stderr.write("Invalid category")
                     return
                 l.append(rec.Record(cate, desc, amt))
@@ -69,9 +70,17 @@ class Records:
         
 
     def view(self):
+        if(self._is_empty()):
+            return
+        sum = 0
         for i, record in enumerate(self._records):
+            sum += int(record.amount)
             print(f"{i+1}. {record.display()}")
+        print(f"\nNow you have {self._init_balance+sum} dollars")
+
     def delete(self, target):
+        if(self._is_empty()):
+            return
         found_index = []
         for i, record in enumerate(self._records):
             if target == record.description:
@@ -95,9 +104,24 @@ class Records:
         else:
             sys.stderr.write("No such record")
 
-    def find(self, record):
-        pass
+    def find(self, target):
+        if(self._is_empty()):
+            return
+        for i, record in enumerate(self._records):
+            if record.category in target:
+                print(f"{i+1}. {record.display()}")
+        
     def save(self):
-        pass
+        try:
+            with open("user_records/record.txt", 'w') as fh:
+                fh.write(f"{self._init_balance}\n")
+                for record in self._records:
+                    fh.write(f"{record.category}:{record.description}:{record.amount}\n")
+        except OSError as err:
+            sys.stderr.write(err)
+
     
-    
+    >>> def	extractPos1(tup):
+...					return	tup[1]
+...
+>>>	M.sort(key=extractPos1)

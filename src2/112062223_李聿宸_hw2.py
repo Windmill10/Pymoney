@@ -7,6 +7,7 @@ def init():
         init_balance = int(fh.readline())
 
         for line in fh.readlines():
+
             records.append(line.strip())
         fh.close()
     except ValueError:
